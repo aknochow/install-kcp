@@ -4,7 +4,8 @@
 
 `ansible-playbook install-kcp.yaml`
 
-This will install kcp `v0.10.0` on port 6443 and enable/start the service:
+This will install kcp `v0.11.0` to /etc/kcp and enable/start the service on port 6443.
+
 ```
 systemctl status kcp
 ● kcp.service - kcp
@@ -36,12 +37,4 @@ systemctl status kcp
         CPU: 4.520s
      CGroup: /system.slice/kcp.service
              └─80380 /usr/local/bin/kcp start --secure-port 6447 --feature-gates=KCPSyncerTunnel=true
-```
-
-Install a specific version of kcp:
-
-`ansible-playbook install-kcp.yaml -e "kcp_version=0.11.0"`
-```
-kcp --version
-kcp version v1.24.3+kcp-v0.11.0
 ```
