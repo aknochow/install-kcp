@@ -2,8 +2,10 @@
 - name: Install KCP
   hosts: localhost
   vars:
+    kcp_secure_port: 6447
+    kcp_extra_args: "--feature-gates=KCPSyncerTunnel=true"
+    kcp_version: 0.10.0    
     kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download
-    kcp_version: 0.10.0
     host_os: "{{ lookup('ansible.builtin.pipe', 'uname -s') | lower }}"
     host_arch: "{{ lookup('ansible.builtin.pipe', 'uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/') }}"
 #
@@ -21,7 +23,13 @@
     become: true
 
   - name: Install systemd unit
-    ansible.builtin.copy:
-      src: kcp.service
+    ansible.builtin.template:
+      src: kcp.service.j2
       dest: /etc/systemd/system
     become: true  
+
+  - name: Enable and Start kcp systemd service on port {{ kcp_port }}
+    ansible.builtin.systemd:
+      name: kcp
+      state: started
+      enabled: true    

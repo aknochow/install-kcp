@@ -9,4 +9,4 @@ WantedBy=multi-user.target
 
 [Service]
 WorkingDirectory=/root/
-ExecStart=/usr/local/bin/kcp start --secure-port 6447 --feature-gates=KCPSyncerTunnel=true
+ExecStart=/usr/local/bin/kcp start --secure-port {{ kcp_secure_port }} {{ extra_flags }}
