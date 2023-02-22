@@ -2,10 +2,9 @@
 
 ### Standard Install
 
-`ansible-playbook install-kcp.yaml`
-
 This will install kcp `v0.11.0` to /etc/kcp and enable/start the service on port 6443.
 
+`ansible-playbook install-kcp.yaml`
 ```
 systemctl status kcp
 ● kcp.service - kcp
