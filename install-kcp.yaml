@@ -28,8 +28,9 @@
       dest: /etc/systemd/system
     become: true  
 
-  - name: Enable and Start kcp systemd service on port {{ kcp_port }}
+  - name: Enable and Start kcp systemd service on port {{ kcp_secure_port }}
     ansible.builtin.systemd:
       name: kcp
       state: started
       enabled: true    
+    become: true  
