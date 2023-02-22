@@ -2,18 +2,20 @@
 - name: Install KCP
   hosts: localhost
   vars:
-    kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download/
+    kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download
     kcp_version: 0.10.0
-    host_os: "{{ lookup('ansible.builtin.pipe', '(uname -s | tr '[:upper:]' '[:lower:]')') }}"
+    host_os: "{{ lookup('ansible.builtin.pipe', 'uname -s') | lower }}"
     host_arch: "{{ lookup('ansible.builtin.pipe', 'uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/') }}"
 #
-  tasks:  
+  tasks:
 #
-  - name: Download kcp and kubectl plugin ({{ host_os }}_{{ host_arch }})
+  - name: Download and extract kcp and kubectl plugin (v{{ kcp_version }}_{{ host_os }}_{{ host_arch }})
     ansible.builtin.unarchive:
-      src: "{{ kcp_baseurl }}/{{ kcp_version }}/{{ item }}_{{ host_os }}_{{ host_arch }}.tar.gz"
+      src: "{{ kcp_baseurl }}/v{{ kcp_version }}/{{ item }}_{{ kcp_version }}_{{ host_os }}_{{ host_arch }}.tar.gz"
       dest: /usr/local/bin
       mode: "0755"
+      remote_src: yes
     loop:
       - kcp
       - kubectl-kcp-plugin
+    become: true
