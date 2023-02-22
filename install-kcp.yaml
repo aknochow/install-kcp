@@ -4,7 +4,9 @@
   vars:
     kcp_secure_port: 6443
     kcp_extra_args: ""
-    kcp_version: 0.10.0
+    kcp_version: 0.11.0
+    kcp_rootdir: /etc/kcp
+    kcp_kubeconfig_mode: 0644
     kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download
     host_os: "{{ lookup('ansible.builtin.pipe', 'uname -s') | lower }}"
     host_arch: "{{ lookup('ansible.builtin.pipe', 'uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/') }}"
@@ -30,6 +32,12 @@
       force: true
     become: true
 
+  - name: Ensure root directory
+    ansible.builtin.file:
+      path: /etc/kcp
+      state: directory
+    become: true
+
   - name: Enable and Start kcp systemd service on port {{ kcp_secure_port }}
     ansible.builtin.systemd:
       name: kcp
@@ -37,3 +45,14 @@
       enabled: true
       daemon_reload: true
     become: true
+
+  - name: Set kubeconfig permissions
+    ansible.builtin.file:
+      path: "{{ kcp_rootdir }}/admin.kubeconfig"
+      mode: "{{ kcp_kubeconfig_mode }}"
+    become: true
+
+  - name: Run this command to access kcp
+    debug:
+      msg: 
+        - export KUBECONFIG={{ kcp_rootdir }}/admin.kubeconfig

@@ -8,5 +8,5 @@ After=network-online.target
 WantedBy=multi-user.target
 
 [Service]
-WorkingDirectory=/root/
-ExecStart=/usr/local/bin/kcp start --secure-port {{ kcp_secure_port }} {{ kcp_extra_args }}
+WorkingDirectory={{ kcp_rootdir }}
+ExecStart=/usr/local/bin/kcp start --secure-port {{ kcp_secure_port }} --root-directory {{ kcp_rootdir }} {{ kcp_extra_args }}
