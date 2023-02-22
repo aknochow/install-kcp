@@ -9,4 +9,4 @@ WantedBy=multi-user.target
 
 [Service]
 WorkingDirectory=/root/
-ExecStart=/usr/local/bin/kcp start --secure-port {{ kcp_secure_port }} {{ extra_flags }}
+ExecStart=/usr/local/bin/kcp start --secure-port {{ kcp_secure_port }} {{ kcp_extra_args }}
