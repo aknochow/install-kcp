@@ -4,7 +4,7 @@
   vars:
     kcp_secure_port: 6447
     kcp_extra_args: "--feature-gates=KCPSyncerTunnel=true"
-    kcp_version: 0.10.0    
+    kcp_version: 0.10.0
     kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download
     host_os: "{{ lookup('ansible.builtin.pipe', 'uname -s') | lower }}"
     host_arch: "{{ lookup('ansible.builtin.pipe', 'uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/') }}"
@@ -14,9 +14,9 @@
   - name: Download and extract kcp and kubectl plugin (v{{ kcp_version }}_{{ host_os }}_{{ host_arch }})
     ansible.builtin.unarchive:
       src: "{{ kcp_baseurl }}/v{{ kcp_version }}/{{ item }}_{{ kcp_version }}_{{ host_os }}_{{ host_arch }}.tar.gz"
-      dest: /usr/local/bin
-      mode: "0755"
+      dest: /usr/local
       remote_src: yes
+      setype: bin_t
     loop:
       - kcp
       - kubectl-kcp-plugin
@@ -26,11 +26,11 @@
     ansible.builtin.template:
       src: kcp.service.j2
       dest: /etc/systemd/system
-    become: true  
+    become: true
 
   - name: Enable and Start kcp systemd service on port {{ kcp_secure_port }}
     ansible.builtin.systemd:
       name: kcp
       state: started
-      enabled: true    
-    become: true  
+      enabled: true
+    become: true
