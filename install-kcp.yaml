@@ -19,3 +19,9 @@
       - kcp
       - kubectl-kcp-plugin
     become: true
+
+  - name: Install systemd unit
+    ansible.builtin.copy:
+      src: kcp.service
+      dest: /etc/systemd/system
+    become: true  

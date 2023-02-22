@@ -1,0 +1,12 @@
+[Unit]
+Description=kcp
+Documentation=https://docs.kcp.io
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+WorkingDirectory=/root/
+ExecStart=/usr/local/bin/kcp start --secure-port 6447 --feature-gates=KCPSyncerTunnel=true
