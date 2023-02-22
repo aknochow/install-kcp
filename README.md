@@ -22,7 +22,7 @@ systemctl status kcp
 
 ### Custom Install
 
-You can override variables in the install-kcp.yaml or pass them on the command line.
+You can override variables in install-kcp.yaml or pass them as extra vars on the command line with "-e".
 
 `ansible-playbook install-kcp.yaml -e "kcp_secure_port=6447" -e "kcp_extra_args=--feature-gates=KCPSyncerTunnel=true"`
 ```
