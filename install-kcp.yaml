@@ -33,7 +33,7 @@
 
   - name: Ensure root directory
     ansible.builtin.file:
-      path: /etc/kcp
+      path: "{{ kcp_rootdir }}"
       state: directory
     become: true
 
