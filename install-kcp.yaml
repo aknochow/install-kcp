@@ -51,6 +51,11 @@
       mode: "{{ kcp_kubeconfig_mode }}"
     become: true
 
+  - name: Wait for the admin.kubeconfig file to be created
+    ansible.builtin.wait_for:
+      path: "{{ kcp_rootdir }}/admin.kubeconfig"
+      state: present
+
   - name: Run this command to access kcp
     debug:
       msg: 
