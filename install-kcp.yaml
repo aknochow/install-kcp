@@ -10,6 +10,12 @@
     kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download
     host_os: "{{ ansible_facts['system'] | lower }}"
     host_arch: "{{ ansible_facts['architecture'] | regex_replace('aarch64', 'arm64') | regex_replace('x86_64', 'amd64') }}"
+  handlers:
+    - name: Restart kcp
+      ansible.builtin.systemd:
+        name: kcp
+        state: restarted
+      become: true
 #
   tasks:
 #
@@ -23,6 +29,7 @@
       - kcp
       - kubectl-kcp-plugin
     become: true
+    notify: Restart kcp
 
   - name: Install systemd unit
     ansible.builtin.template:
@@ -30,6 +37,7 @@
       dest: /etc/systemd/system/kcp.service
       mode: "0644"
     become: true
+    notify: Restart kcp
 
   - name: Ensure root directory
     ansible.builtin.file:
@@ -40,7 +48,7 @@
   - name: Enable and Start kcp systemd service on port {{ kcp_secure_port }}
     ansible.builtin.systemd:
       name: kcp
-      state: restarted
+      state: started
       enabled: true
       daemon_reload: true
     become: true
