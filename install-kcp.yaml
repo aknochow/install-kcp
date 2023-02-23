@@ -8,8 +8,8 @@
     kcp_rootdir: /etc/kcp
     kcp_kubeconfig_mode: 0644
     kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download
-    host_os: "{{ lookup('ansible.builtin.pipe', 'uname -s') | lower }}"
-    host_arch: "{{ lookup('ansible.builtin.pipe', 'uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/') }}"
+    host_os: "{{ ansible_facts['system'] | lower }}"
+    host_arch: "{{ ansible_facts['architecture'] | regex_replace('aarch64', 'arm64') | regex_replace('x86_64', 'amd64') }}"
 #
   tasks:
 #
