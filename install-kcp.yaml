@@ -25,11 +25,10 @@
     become: true
 
   - name: Install systemd unit
-    ansible.builtin.copy:
-      content: "{{ lookup('ansible.builtin.template', 'kcp.service.j2') }}"
+    ansible.builtin.template:
+      src: kcp.service.j2
       dest: /etc/systemd/system/kcp.service
-      remote_src: yes
-      force: true
+      mode: "0644"
     become: true
 
   - name: Ensure root directory
