@@ -18,13 +18,14 @@ systemctl status kcp
      CGroup: /system.slice/kcp.service
              └─80962 /usr/local/bin/kcp start --secure-port 6443
 ```
+### Systemd
+_the kcp service is managed using systemd:_
 
-kcp can be started/stopped/restarted using systemd:
 `sudo systemctl (start/stop/restart) kcp`
 
-Logs:
+##### Logs:
 `journalctl -eu kcp`
-Live logs:
+##### Live logs:
 `journalctl -eu kcp -f`
 
 
