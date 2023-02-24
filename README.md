@@ -19,6 +19,15 @@ systemctl status kcp
              └─80962 /usr/local/bin/kcp start --secure-port 6443
 ```
 
+kcp can be started/stopped/restarted using systemd:
+`sudo systemctl (start/stop/restart) kcp`
+
+Logs:
+`journalctl -eu kcp`
+Live logs:
+`journalctl -eu kcp -f`
+
+
 ### Custom Install
 
 You can override variables in install-kcp.yaml or pass them as extra vars on the command line with "-e".

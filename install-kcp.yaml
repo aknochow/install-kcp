@@ -1,5 +1,5 @@
 ---
-- name: Install KCP
+- name: Install kcp
   hosts: localhost
   vars:
     kcp_secure_port: 6443
@@ -53,16 +53,16 @@
       daemon_reload: true
     become: true
 
+  - name: Wait for the admin.kubeconfig file to be created
+    ansible.builtin.wait_for:
+      path: "{{ kcp_rootdir }}/admin.kubeconfig"
+      state: present
+
   - name: Set kubeconfig permissions
     ansible.builtin.file:
       path: "{{ kcp_rootdir }}/admin.kubeconfig"
       mode: "{{ kcp_kubeconfig_mode }}"
     become: true
-
-  - name: Wait for the admin.kubeconfig file to be created
-    ansible.builtin.wait_for:
-      path: "{{ kcp_rootdir }}/admin.kubeconfig"
-      state: present
 
   - name: Run this command to access kcp
     debug:
