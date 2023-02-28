@@ -1,0 +1,23 @@
+---
+- name: Clone and Build kcp from source
+  hosts: localhost
+  vars:
+    # clone source
+    source_repo: "kcp-dev/kcp"
+    source_branch: "main"
+  environment:
+    IGNORE_GO_VERSION: 1
+#
+  tasks:  
+#
+  - name: Clone {{ source_repo }}:{{ source_branch }} from github.com
+    ansible.builtin.git:
+      repo: git@github.com:{{ source_repo }}.git
+      dest: src
+      single_branch: yes
+      version: "{{ source_branch }}"
+      force: true
+
+  - name: Build 
+    community.general.make:
+      chdir: src
