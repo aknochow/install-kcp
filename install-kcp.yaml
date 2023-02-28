@@ -45,26 +45,20 @@
       state: directory
     become: true
 
-  - name: Enable and Start kcp systemd service on port {{ kcp_secure_port }}
+  - name: Enable kcp systemd service on port {{ kcp_secure_port }} and start with handler
     ansible.builtin.systemd:
       name: kcp
-      state: started
       enabled: true
       daemon_reload: true
     become: true
+    notify: Restart kcp
 
-  - name: Wait for the admin.kubeconfig file to be created
-    ansible.builtin.wait_for:
-      path: "{{ kcp_rootdir }}/admin.kubeconfig"
-      state: present
-
-  - name: Set kubeconfig permissions
-    ansible.builtin.file:
-      path: "{{ kcp_rootdir }}/admin.kubeconfig"
-      mode: "{{ kcp_kubeconfig_mode }}"
-    become: true
+  - name: Run this command to set kubeconfig readable without root
+    debug:
+      msg:
+        - sudo chmod +r {{ kcp_rootdir }}/admin.kubeconfig
 
   - name: Run this command to access kcp
     debug:
-      msg: 
+      msg:
         - export KUBECONFIG={{ kcp_rootdir }}/admin.kubeconfig
