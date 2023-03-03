@@ -2,20 +2,18 @@
 - name: Clone and Build kcp from source
   hosts: localhost
   vars:
-    # clone source
     source_repo: kcp-dev/kcp
     source_branch: main
-    install: false
   environment:
-    IGNORE_GO_VERSION: 1
+    IGNORE_GO_VERSION: 0
 #
-  tasks:  
+  tasks:
 #
   - name: Ensure golang and make are installed
     ansible.builtin.package:
       name:
-       	- golang
-       	- make
+        - golang
+        - make
       state: present
 
   - name: Clone {{ source_repo }}:{{ source_branch }} from github.com
@@ -26,12 +24,6 @@
       version: "{{ source_branch }}"
       force: true
 
-  - name: Build 
+  - name: Build
     community.general.make:
       chdir: src/{{ source_repo }}
-
-  - name: Optionally Install KCP using built binaries
-    import_playbook:
-    vars:
-      kcp_build_src: src/{{ source_repo }}/bin
-    when: install | bool
