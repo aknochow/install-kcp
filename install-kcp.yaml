@@ -34,12 +34,12 @@
     notify: Restart kcp
     when: kcp_build_src == "kcp"
 
-  - name: Optionally use locally built binaries
+  - name: Optionally install kcp with locally built binaries
     ansible.builtin.copy:
-      src: "{{ kcb_build_src }}"
+      src: "{{ kcp_build_src }}/{{ item }}"
       dest: /usr/local/bin/{{ item }}
       owner: root
-      group: root      
+      group: root
       remote_src: yes
       setype: bin_t
     loop:
@@ -47,8 +47,8 @@
       - kubectl-kcp
       - kubectl-workspace
       - kubectl-workspaces
-      - kubectl-ws 
-    when: kcp_build_src != "kcp"
+      - kubectl-ws
+    when: kcp_build_src != "kcp"    
 
     become: true
     notify: Restart kcp

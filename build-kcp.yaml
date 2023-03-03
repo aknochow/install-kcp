@@ -11,6 +11,13 @@
 #
   tasks:  
 #
+  - name: Ensure golang and make are installed
+    ansible.builtin.package:
+      name:
+       	- golang
+       	- make
+      state: present
+
   - name: Clone {{ source_repo }}:{{ source_branch }} from github.com
     ansible.builtin.git:
       repo: https://github.com/{{ source_repo }}.git
