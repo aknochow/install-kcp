@@ -2,7 +2,7 @@
 
 ### Standard Install
 
-This will install kcp `v0.11.0` to /etc/kcp and enable/start the service on port 6443.
+Install kcp `v0.11.0` to /etc/kcp and enable/start the service on port 6443:
 
 `ansible-playbook install-kcp.yaml`
 ```
@@ -30,7 +30,7 @@ _the kcp service is managed using systemd:_
 
 ### Custom Install
 
-Override variables in `install-kcp.yaml` or pass them as extra_vars on the command line with `-e`.
+Override variables in `install-kcp.yaml` or pass them as extra_vars on the command line with `-e`:
 
 `ansible-playbook install-kcp.yaml -e "kcp_extra_args=--feature-gates=KCPSyncerTunnel=true"`
 ```
@@ -49,9 +49,9 @@ systemctl status kcp
 
 ### Install using Binaries Built from Source
 
-Install kcp using binaries built from source by passing '-e build=true`
+Use `-e build=true` to install kcp using binaries built from source (kcp-dev/kcp:main):
 
-`ansible-playbook install-kcp.yaml -e build=true -e source_repo=aknochow/kcp -e source_branch=main`
+`ansible-playbook install-kcp.yaml -e build=true`
 
 Build from alternate branches and forks by passing the `source_repo` and `source_branch` extra_vars:
 
