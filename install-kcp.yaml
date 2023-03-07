@@ -1,6 +1,7 @@
 ---
 - name: Install kcp
   hosts: localhost
+  become: true
   vars:
     kcp_secure_port: 6443
     kcp_extra_args: ""
@@ -20,7 +21,6 @@
       ansible.builtin.systemd:
         name: kcp
         state: restarted
-      become: true
 #
   tasks:
 #
@@ -35,7 +35,6 @@
     loop:
       - kcp
       - kubectl-kcp-plugin
-    become: true
     notify: Restart kcp
     when: not build | bool
 
@@ -76,8 +75,6 @@
       - kubectl-workspaces
       - kubectl-ws
     when: build | bool
-
-    become: true
     notify: Restart kcp
 
   - name: Install systemd unit
@@ -85,21 +82,18 @@
       src: kcp.service.j2
       dest: /etc/systemd/system/kcp.service
       mode: "0644"
-    become: true
     notify: Restart kcp
 
   - name: Ensure root directory
     ansible.builtin.file:
       path: "{{ kcp_rootdir }}"
       state: directory
-    become: true
 
   - name: Enable kcp systemd service on port {{ kcp_secure_port }} and start with handler
     ansible.builtin.systemd:
       name: kcp
       enabled: true
       daemon_reload: true
-    become: true
     notify: Restart kcp
 
   - name: Run this command to set kubeconfig readable without root

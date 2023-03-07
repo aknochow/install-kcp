@@ -1,6 +1,7 @@
 ---
 - name: Clone and Build kcp from source
   hosts: localhost
+  become: true
   vars:
     source_repo: kcp-dev/kcp
     source_branch: main
@@ -15,8 +16,7 @@
         - golang
         - make
       state: present
-    become: true
-    
+
   - name: Clone {{ source_repo }}:{{ source_branch }} from github.com
     ansible.builtin.git:
       repo: https://github.com/{{ source_repo }}.git
@@ -28,4 +28,3 @@
   - name: Build
     community.general.make:
       chdir: src
-    become: true
