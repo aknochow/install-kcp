@@ -18,7 +18,6 @@ systemctl status kcp
      CGroup: /system.slice/kcp.service
              └─80962 /usr/local/bin/kcp start --secure-port 6443
 ```
-### Systemd
 _the kcp service is managed using systemd:_
 
 `sudo systemctl (start/stop/restart) kcp`
@@ -31,9 +30,9 @@ _the kcp service is managed using systemd:_
 
 ### Custom Install
 
-You can override variables in install-kcp.yaml or pass them as extra vars on the command line with "-e".
+Override variables in `install-kcp.yaml` or pass them as extra_vars on the command line with `-e`.
 
-`ansible-playbook install-kcp.yaml -e "kcp_secure_port=6447" -e "kcp_extra_args=--feature-gates=KCPSyncerTunnel=true"`
+`ansible-playbook install-kcp.yaml -e "kcp_extra_args=--feature-gates=KCPSyncerTunnel=true"`
 ```
 systemctl status kcp
 ● kcp.service - kcp
@@ -45,5 +44,15 @@ systemctl status kcp
      Memory: 211.5M
         CPU: 4.520s
      CGroup: /system.slice/kcp.service
-             └─80380 /usr/local/bin/kcp start --secure-port 6447 --feature-gates=KCPSyncerTunnel=true
+             └─80380 /usr/local/bin/kcp start --feature-gates=KCPSyncerTunnel=true
 ```
+
+### Install using Binaries Built from Source
+
+Install kcp using binaries built from source by passing the `build=true` extra_var
+
+`ansible-playbook install-kcp.yaml -e build=true -e source_repo=aknochow/kcp -e source_branch=main`
+
+Build from alternate branches and forks by passing the `source_repo` and `source_branch` extra_vars:
+
+`ansible-playbook install-kcp.yaml -e build=true -e source_repo=aknochow/kcp -e source_branch=main`
