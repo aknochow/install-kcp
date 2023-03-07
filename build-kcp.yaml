@@ -16,8 +16,9 @@
       dest: src
       single_branch: yes
       version: "{{ source_branch }}"
-      force: true
+      force: true      
 
   - name: Build 
     community.general.make:
       chdir: src
+    become: true
