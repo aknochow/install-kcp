@@ -6,9 +6,15 @@
     kcp_extra_args: ""
     kcp_version: 0.11.0
     kcp_rootdir: /etc/kcp
-    kcp_baseurl: https://github.com/kcp-dev/kcp/releases/download
+    kcp_bin_baseurl: https://github.com/kcp-dev/kcp/releases/download
     host_os: "{{ ansible_facts['system'] | lower }}"
     host_arch: "{{ ansible_facts['architecture'] | regex_replace('aarch64', 'arm64') | regex_replace('x86_64', 'amd64') }}"
+    # optional build vars
+    build: false
+    source_repo: kcp-dev/kcp
+    source_branch: main
+  environment:
+    IGNORE_GO_VERSION: 0
   handlers:
     - name: Restart kcp
       ansible.builtin.systemd:
@@ -18,17 +24,59 @@
 #
   tasks:
 #
-  - name: Download and extract kcp and kubectl plugin (v{{ kcp_version }}_{{ host_os }}_{{ host_arch }})
+  - name: Download and extract kcp and kubectl plugin (v{{ kcp_version }}_{{ host_os }}_{{ host_arch }}) from official kcp release
     ansible.builtin.unarchive:
-      src: "{{ kcp_baseurl }}/v{{ kcp_version }}/{{ item }}_{{ kcp_version }}_{{ host_os }}_{{ host_arch }}.tar.gz"
+      src: "{{ kcp_bin_baseurl }}/v{{ kcp_version }}/{{ item }}_{{ kcp_version }}_{{ host_os }}_{{ host_arch }}.tar.gz"
       dest: /usr/local
       owner: root
-      group: root      
+      group: root
       remote_src: yes
       setype: bin_t
     loop:
       - kcp
       - kubectl-kcp-plugin
+    become: true
+    notify: Restart kcp
+    when: not build | bool
+
+  - name: Ensure golang and make are installed if building from source
+    ansible.builtin.package:
+      name:
+        - golang
+        - make
+      state: present
+    when: build | bool
+
+  - name: Clone {{ source_repo }}:{{ source_branch }} from github.com if building
+    ansible.builtin.git:
+      repo: https://github.com/{{ source_repo }}.git
+      dest: src/{{ source_repo }}
+      single_branch: yes
+      version: "{{ source_branch }}"
+      force: true
+    when: build | bool
+
+  - name: Build
+    community.general.make:
+      chdir: src/{{ source_repo }}
+    when: build | bool
+
+  - name: Optionally install kcp with locally built binaries
+    ansible.builtin.copy:
+      src: src/{{ source_repo }}/bin/{{ item }}
+      dest: /usr/local/bin/{{ item }}
+      owner: root
+      group: root
+      remote_src: yes
+      setype: bin_t
+    loop:
+      - kcp
+      - kubectl-kcp
+      - kubectl-workspace
+      - kubectl-workspaces
+      - kubectl-ws
+    when: build | bool
+
     become: true
     notify: Restart kcp
 
