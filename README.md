@@ -49,7 +49,7 @@ systemctl status kcp
 
 ### Install using Binaries Built from Source
 
-Install kcp using binaries built from source by passing the `build=true` extra_var
+Install kcp using binaries built from source by passing '-e build=true`
 
 `ansible-playbook install-kcp.yaml -e build=true -e source_repo=aknochow/kcp -e source_branch=main`
 
