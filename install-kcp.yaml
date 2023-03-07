@@ -96,12 +96,14 @@
       daemon_reload: true
     notify: Restart kcp
 
-  - name: Run this command to set kubeconfig readable without root
+  - name: To access cluster as root the cluster as root...
     debug:
       msg:
-        - sudo chmod +r {{ kcp_rootdir }}/admin.kubeconfig
+       	- export KUBECONFIG={{ kcp_rootdir }}/admin.kubeconfig
 
-  - name: Run this command to access kcp
+  - name: To access the cluster as a non-root user...
     debug:
       msg:
-        - export KUBECONFIG={{ kcp_rootdir }}/admin.kubeconfig
+       	- sudo cp {{ kcp_rootdir }}/admin.kubeconfig ~/admin.kubeconfig
+       	- sudo chown $(whoami) ~/admin.kubeconfig && chmod +r ~/admin.kubeconfig
+       	- export KUBECONFIG=~/admin.kubeconfig
