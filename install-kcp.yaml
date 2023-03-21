@@ -105,6 +105,4 @@
   - name: To access the cluster as a non-root user...
     debug:
       msg:
-        sudo cp {{ kcp_rootdir }}/admin.kubeconfig ~/admin.kubeconfig
-        sudo chown $(whoami) ~/admin.kubeconfig && chmod +r ~/admin.kubeconfig
-        export KUBECONFIG=~/admin.kubeconfig
+        sudo cp {{ kcp_rootdir }}/admin.kubeconfig ~/admin.kubeconfig && sudo chown $(whoami) ~/admin.kubeconfig && chmod +r ~/admin.kubeconfig && export KUBECONFIG=~/admin.kubeconfig
