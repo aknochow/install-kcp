@@ -66,6 +66,7 @@
       dest: /usr/local/bin/{{ item }}
       owner: root
       group: root
+      mode: 0755
       remote_src: yes
       setype: bin_t
     loop:
@@ -99,11 +100,11 @@
   - name: To access cluster as root the cluster as root...
     debug:
       msg:
-       	- export KUBECONFIG={{ kcp_rootdir }}/admin.kubeconfig
+        export KUBECONFIG={{ kcp_rootdir }}/admin.kubeconfig
 
   - name: To access the cluster as a non-root user...
     debug:
       msg:
-       	- sudo cp {{ kcp_rootdir }}/admin.kubeconfig ~/admin.kubeconfig
-       	- sudo chown $(whoami) ~/admin.kubeconfig && chmod +r ~/admin.kubeconfig
-       	- export KUBECONFIG=~/admin.kubeconfig
+        sudo cp {{ kcp_rootdir }}/admin.kubeconfig ~/admin.kubeconfig
+        sudo chown $(whoami) ~/admin.kubeconfig && chmod +r ~/admin.kubeconfig
+        export KUBECONFIG=~/admin.kubeconfig
